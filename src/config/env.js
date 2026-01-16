@@ -2,6 +2,7 @@ import "dotenv/config";
 import { z } from "zod";
 export const envSchema = z.object({
   DB_URL: z.string().min(10, { message: "DB_URL is required" }),
+  JWT_SECRET: z.string(),
 });
 
 const env = envSchema.safeParse(process.env);

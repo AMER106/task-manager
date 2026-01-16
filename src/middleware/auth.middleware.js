@@ -19,3 +19,16 @@ export const validateSignup = (req, res, next) => {
     return res.status(400).json({ message: error.message });
   }
 };
+const loginSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export const validateSignin = (req, res, next) => {
+  try {
+    loginSchema.parse(req.body);
+    next();
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+};
