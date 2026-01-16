@@ -54,18 +54,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
 // Optional: compare password method (very convenient)
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
@@ -76,7 +64,6 @@ userSchema.pre("save", function (next) {
   if (this.isModified("email")) {
     this.email = this.email.toLowerCase().trim();
   }
-  next();
 });
 
 export const User = mongoose.model("User", userSchema);
