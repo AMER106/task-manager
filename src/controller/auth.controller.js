@@ -15,12 +15,20 @@ export const signupController = async (req, res) => {
       password: passwordHash,
     });
     console.log(newUser);
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        message: "Email already exists. .",
+      });
+    }
     await newUser.save();
     return res
       .status(201)
       .json({ message: "User registered successfully" }, newUser);
   } catch (err) {
-    return res.status(500).json(err.message);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again later.",
+    });
   }
 };
 

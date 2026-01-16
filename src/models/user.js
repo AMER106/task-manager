@@ -35,18 +35,6 @@ const userSchema = new mongoose.Schema(
       minlength: [8, "Password must be at least 8 characters"],
       maxlength: [100, "Password is too long"],
       select: false,
-      validate: [
-        function (value) {
-          return validator.isStrongPassword(value, {
-            minLength: 8,
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1,
-            minSymbols: 1,
-          });
-        },
-        "Password must contain at least 1 uppercase, 1 lowercase, 1 number and 1 symbol",
-      ],
     },
   },
   {
@@ -64,6 +52,19 @@ userSchema.pre("save", function (next) {
   if (this.isModified("email")) {
     this.email = this.email.toLowerCase().trim();
   }
+});
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  if (!validator.isStrongPassword(this.password)) {
+    return next(
+      new Error(
+        "Password must contain at least 1 uppercase, 1 lowercase, 1 number and 1 symbol"
+      )
+    );
+  }
+
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 userSchema.methods.validatePassword = async function (password) {
