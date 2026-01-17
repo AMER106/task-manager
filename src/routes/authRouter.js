@@ -1,13 +1,11 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-import {
-  validateSignup,
-  validateSignin,
-} from "../middleware/auth.middleware.js";
+
 import {
   signupController,
   signinController,
 } from "../controller/auth.controller.js";
+import { validateSignin, validateSignup } from "../utils/validation.js";
 export const authRouter = express.Router();
 
 const loginLimiter = rateLimit({
