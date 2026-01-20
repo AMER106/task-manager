@@ -26,10 +26,11 @@ export const auth = async (req, res, next) => {
       process.env.JWT_SECRET || "DEVSECRETKEY",
       {
         algorithms: ["HS256"],
-      }
+      },
     );
 
-    const user = await User.findById(decoded._id).select("-password"); // exclude password
+    const user = await User.findById(decoded.id).select("-password"); // exclude password
+    console.log("Decoded payload:", decoded);
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }

@@ -63,7 +63,7 @@ export const signinController = async (req, res) => {
         id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" } // consider shorter: '15m' or '30m'
+      { expiresIn: "7d" }, // consider shorter: '15m' or '30m'
     );
 
     // 5. Cookie options - safer defaults
@@ -86,6 +86,7 @@ export const signinController = async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        token: token,
       },
       // token is in cookie - no need to send it in body (more secure)
     });
