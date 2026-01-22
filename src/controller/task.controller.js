@@ -59,3 +59,35 @@ export const getMyTasks = async (req, res) => {
     });
   }
 };
+
+export const updateTaskController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const task = await Task.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true, runValidators: true },
+    ).populate("user", "firstName lastName email");
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Task updated successfully",
+      data: task,
+    });
+  } catch (err) {
+    console.error("Update task error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while updating task",
+      error: err.message, // only in dev – remove in production
+    });
+  }
+};

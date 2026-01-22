@@ -3,8 +3,10 @@ import { auth } from "../middleware/auth.middleware.js";
 import {
   createTaskController,
   getMyTasks,
+  updateTaskController,
 } from "../controller/task.controller.js";
 export const taskRouter = express.Router();
 
 taskRouter.post("/create", auth, createTaskController);
 taskRouter.get("/my-tasks", auth, getMyTasks);
+taskRouter.patch("/update/:id", auth, updateTaskController);
